@@ -3,7 +3,7 @@ import { createNavbar } from "./navbar.js";
 import { createFooter } from "./footer.js";
 createNavbar();
 
-const DEFAULT_COLLECTION_URL = "http://0.0.0.0:8000/series/detail";
+const DEFAULT_COLLECTION_URL = "http://127.0.0.1:8000/series/detail";
 const FALLBACK_IMG = "https://www.serieslike.com/img/shop_01.png";
 
 /* ---------------- Utils ---------------- */
@@ -113,7 +113,7 @@ function getApiBase(): string {
       const u = new URL(apiOverride, document.baseURI);
       return u.origin; // e.g. http://0.0.0.0:8000
     }
-  } catch {}
+  } catch { }
   try {
     const d = new URL(DEFAULT_COLLECTION_URL, document.baseURI);
     return d.origin;
@@ -206,7 +206,7 @@ async function cacheMatchBlob(key: string): Promise<Blob | undefined> {
     const cache = await caches.open(POSTER_CACHE_NAME);
     const res = await cache.match(key);
     if (res && res.ok) return await res.blob();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -218,7 +218,7 @@ async function cachePutBlob(key: string, blob: Blob, contentType?: string) {
     headers.set("Content-Type", contentType || blob.type || "application/octet-stream");
     const resp = new Response(blob, { headers });
     await cache.put(key, resp);
-  } catch {}
+  } catch { }
 }
 
 /**
@@ -255,7 +255,7 @@ async function resolvePosterSrc(
     try {
       const absUrl = toAbsoluteURL(remoteUrl);
       return { src: viaImageProxy(absUrl) };
-    } catch {}
+    } catch { }
   }
 
   // 4) สุดท้ายใช้รูปสำรอง
@@ -366,8 +366,8 @@ export class ShowDetail extends HTMLElement {
       attrSrc ||
       (apiOverride
         ? (/\/series\/detail(\/|$)/.test(apiOverride)
-            ? apiOverride
-            : joinBasePath(apiOverride, "series/detail"))
+          ? apiOverride
+          : joinBasePath(apiOverride, "series/detail"))
         : DEFAULT_COLLECTION_URL);
 
     const attrId = this.getAttribute("show-id")?.trim();
@@ -425,14 +425,14 @@ export class ShowDetail extends HTMLElement {
         backHref: (this.getAttribute("back-href") as string) || "javascript:history.back()",
         cast: Array.isArray(raw?.cast)
           ? raw.cast.map((v: any) => ({
-              id: toNumId(v?.id),
-              first: String(v?.first ?? v?.firstname ?? "").trim(),
-              last: String(v?.last ?? v?.lastname ?? "").trim(),
-              img: proxifyImageIfNeeded(v?.img ?? v?.image ?? v?.photo ?? ""),
-              href: toAbsPreferDoc(v?.href ?? v?.url ?? ""),
-            }))
+            id: toNumId(v?.id),
+            first: String(v?.first ?? v?.firstname ?? "").trim(),
+            last: String(v?.last ?? v?.lastname ?? "").trim(),
+            img: proxifyImageIfNeeded(v?.img ?? v?.image ?? v?.photo ?? ""),
+            href: toAbsPreferDoc(v?.href ?? v?.url ?? ""),
+          }))
           : Array.isArray(raw?.castings)
-          ? raw.castings.map((item: any, idx: number) => {
+            ? raw.castings.map((item: any, idx: number) => {
               // โครงสร้าง { name, url, image }
               const name = String(item?.name ?? "").trim();
               const parts = name.split(/\s+/);
@@ -446,7 +446,7 @@ export class ShowDetail extends HTMLElement {
                 href: toAbsPreferDoc(item?.url ?? ""),
               } as CastItem;
             })
-          : [],
+            : [],
       };
 
       this.applyData(data);
@@ -496,12 +496,12 @@ export class ShowDetail extends HTMLElement {
         const parsed = JSON.parse(castAttr) as any[];
         this._cast = Array.isArray(parsed)
           ? parsed.map((v) => ({
-              id: toNumId(v?.id),
-              first: String(v?.first || ""),
-              last: String(v?.last || ""),
-              img: proxifyImageIfNeeded(v?.img || ""),
-              href: toAbsPreferDoc(v?.href || ""),
-            }))
+            id: toNumId(v?.id),
+            first: String(v?.first || ""),
+            last: String(v?.last || ""),
+            img: proxifyImageIfNeeded(v?.img || ""),
+            href: toAbsPreferDoc(v?.href || ""),
+          }))
           : [];
       } catch {
         /* ignore bad JSON */
@@ -580,15 +580,14 @@ export class ShowDetail extends HTMLElement {
           <div class="right">
             <p class="h2">เรื่องย่อ</p>
             <p class="desc" role="region" aria-label="เรื่องย่อ" tabindex="0">${desc}</p>
-            ${
-              trailer
-                ? `
+            ${trailer
+        ? `
               <p class="h2 trailer">ตัวอย่าง</p>
               <iframe class="video" src="${trailer}" allowfullscreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
             `
-                : ""
-            }
+        : ""
+      }
           </div>
         </div>
 

@@ -335,18 +335,22 @@ def get_casting_by_URL(url: str) -> dict:
     # Description
     description = ""
     block = soup.find(attrs={"data-td-block-uid": "tdi_77"})
-
     p_tags = re.findall(r'<p[^>]*>(.*?)</p>', str(block), re.DOTALL)
-
     paragraph = ""
     for i in range(len(p_tags)):
-        new_paragraph = re.sub(r'<br\s*/?>', '\n', p_tags[i], flags=re.IGNORECASE)
+        decoded = html.unescape(p_tags[i])
+        new_paragraph = re.sub(r'<br\s*/?>', '\n', decoded, flags=re.IGNORECASE)
         paragraph = paragraph + "\n" + new_paragraph
-    cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด(?:เมื่อ)?)\s*:.*(?:\n)?', '', paragraph)
-    lines = [line.strip() for line in cleaned.splitlines() if line.strip()]
 
-    with_colon = [line for line in lines if ":" in line]
-    no_colon = [line for line in lines if ":" not in line]
+    cleaned = re.sub(r'(ชื่อ-สกุล|ชื่อเล่น|เกิด(?:เมื่อ)?)\s*[:\-–>].*(?:\n)?', '', paragraph)
+    cleaned = re.sub(r'<[^>]+>', '', cleaned)
+    cleaned = re.sub(r'https?://\S+', '', cleaned)
+    lines = [line.strip() for line in cleaned.splitlines() if line.strip()]
+    normalized = [line.replace("->", ":") for line in lines]
+
+    with_colon = [line for line in normalized if ":" in line]
+    no_colon = [line for line in normalized if ":" not in line]
+
     sorted_lines = with_colon + no_colon
     description = "\n".join(sorted_lines)
 

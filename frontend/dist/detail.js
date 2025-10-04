@@ -121,7 +121,7 @@ function getApiBase() {
     try {
         if (apiOverride) {
             const u = new URL(apiOverride, document.baseURI);
-            return u.origin; // e.g. http://127.0.0.1:8000
+            return u.origin; // e.g. http://0.0.0.0:8000
         }
     }
     catch (_a) { }
@@ -135,7 +135,7 @@ function getApiBase() {
 }
 /** สร้าง URL proxy สำหรับรูปภาพ */
 function viaImageProxy(absUrl) {
-    const base = getApiBase(); // เช่น http://127.0.0.1:8000
+    const base = getApiBase(); // เช่น http://0.0.0.0:8000
     if (!base)
         return absUrl;
     return joinBasePath(base, "image-proxy") + "?url=" + encodeURIComponent(absUrl);
@@ -326,7 +326,7 @@ export class ShowDetail extends HTMLElement {
     /** โหมดโหลดข้อมูล:
      * - ถ้ามี ?url=... → เรียก {collectionUrl}?url=<encoded>
      * - ถ้าไม่มีก็ใช้ ?id=... หรือ attribute show-id → เรียก {collectionUrl}/{id}
-     * - รองรับ ?api=... เป็น base (เช่น http://127.0.0.1:8000 → /series/detail)
+     * - รองรับ ?api=... เป็น base (เช่น http://0.0.0.0:8000 → /series/detail)
      */
     loadData() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -167,9 +167,9 @@ function proxifyImageIfNeeded(maybeUrl) {
 /* -------- Image cache helpers (Cache Storage + ObjectURL) -------- */
 const POSTER_CACHE_NAME = "posters-v1";
 /** คืน base URL ของโฟลเดอร์ ./posters/ */
-function postersBaseURL() {
-    return new URL("./posters/", document.baseURI).toString();
-}
+// function postersBaseURL(): string {
+//   return new URL("./posters/", document.baseURI).toString();
+// }
 /** เช็คว่ามีไฟล์รูปโลคอลจริงไหม */
 function imageExists(url) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -221,12 +221,12 @@ function resolvePosterSrc(id, remoteUrl) {
     return __awaiter(this, void 0, void 0, function* () {
         const exts = ["webp", "jpg", "png", "jpeg"];
         // 1) ลองหาไฟล์โลคอลตาม id หลายสกุล
-        for (const ext of exts) {
-            const localPath = new URL(`./${encodeURIComponent(id)}.${ext}`, postersBaseURL()).toString();
-            if (yield imageExists(localPath)) {
-                return { src: localPath };
-            }
-        }
+        // for (const ext of exts) {
+        //   const localPath = new URL(`./${encodeURIComponent(id)}.${ext}`, postersBaseURL()).toString();
+        //   if (await imageExists(localPath)) {
+        //     return { src: localPath };
+        //   }
+        // }
         // 2) ลอง cache blob โดยใช้ key ตาม id
         const cacheKey = `/cached-posters/${encodeURIComponent(id)}`;
         const cachedBlob = yield cacheMatchBlob(cacheKey);

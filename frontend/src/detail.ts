@@ -186,9 +186,9 @@ export interface ShowDetailAttributes {
 const POSTER_CACHE_NAME = "posters-v1";
 
 /** คืน base URL ของโฟลเดอร์ ./posters/ */
-function postersBaseURL(): string {
-  return new URL("./posters/", document.baseURI).toString();
-}
+// function postersBaseURL(): string {
+//   return new URL("./posters/", document.baseURI).toString();
+// }
 
 /** เช็คว่ามีไฟล์รูปโลคอลจริงไหม */
 async function imageExists(url: string): Promise<boolean> {
@@ -235,12 +235,12 @@ async function resolvePosterSrc(
   const exts = ["webp", "jpg", "png", "jpeg"];
 
   // 1) ลองหาไฟล์โลคอลตาม id หลายสกุล
-  for (const ext of exts) {
-    const localPath = new URL(`./${encodeURIComponent(id)}.${ext}`, postersBaseURL()).toString();
-    if (await imageExists(localPath)) {
-      return { src: localPath };
-    }
-  }
+  // for (const ext of exts) {
+  //   const localPath = new URL(`./${encodeURIComponent(id)}.${ext}`, postersBaseURL()).toString();
+  //   if (await imageExists(localPath)) {
+  //     return { src: localPath };
+  //   }
+  // }
 
   // 2) ลอง cache blob โดยใช้ key ตาม id
   const cacheKey = `/cached-posters/${encodeURIComponent(id)}`;
